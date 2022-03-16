@@ -10,26 +10,6 @@ const Register: React.FC = (props) => {
   const [values, setValues] = useState({ username: "", password: "" });
 
   let navigate = useNavigate();
-  //   useEffect(() => {
-  //     const token = localStorage.getItem("token");
-
-  //     axios
-  //       .get("http://localhost:5000/api/user/attendance", {
-  //         headers: {
-  //           Authorization: token || "no token",
-  //         },
-  //       })
-  //       .then((res) => {
-  //         console.log(res.data);
-  //         // setAttendance(res.data);
-  //         // setLoginStaus(true);
-  //       })
-  //       .catch((error) => {
-  //         const err = error as AxiosError;
-  //         // setLoginStaus(false);
-  //         console.log(err.response?.data);
-  //       });
-  //   }, [loginStatus]);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [event.target.name]: event.target.value });
