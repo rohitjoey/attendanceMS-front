@@ -23,7 +23,7 @@ const Register: React.FC = () => {
         "http://localhost:5000/api/user/register",
         values
       );
-      console.log(user);
+      // console.log(user);
 
       localStorage.setItem("token", user.data.token);
       auth.login(() => {

@@ -21,7 +21,7 @@ const Register: React.FC = (props) => {
         "http://localhost:5000/api/user/login",
         values
       );
-      console.log(user);
+      // console.log(user);
 
       localStorage.setItem("token", user.data.token);
       auth.login(() => {

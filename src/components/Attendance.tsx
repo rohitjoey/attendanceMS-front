@@ -24,7 +24,7 @@ const Attendance: React.FC = () => {
 
   const [attendance, setAttendance] = useState({ attendance: [], no: 0 });
   const [list, setList] = useState(false);
-  const [currentAttendanceId, setCurrentAttendanceId] = useState(0);
+  // const [currentAttendanceId, setCurrentAttendanceId] = useState(0);
 
   const dateToLocal = (data: IAttendance) => {
     // console.log(data.attendance);
@@ -51,7 +51,7 @@ const Attendance: React.FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
+    // console.log("useeffect");
     axios
       .get("http://localhost:5000/api/user/attendance", {
         headers: {
@@ -62,7 +62,7 @@ const Attendance: React.FC = () => {
         if (res.data.no > 0) {
           // console.log(res.data.attendance);
           dateToLocal(res.data);
-
+          // console.log("response");
           setList(true);
         }
         // console.log(res.data);
@@ -70,6 +70,8 @@ const Attendance: React.FC = () => {
       .catch((error) => {
         const err = error as AxiosError;
         // setLoginStaus(false);
+        // console.log("no response");
+
         console.log(err.response?.data);
         setList(false);
       });
@@ -102,7 +104,7 @@ const Attendance: React.FC = () => {
     };
 
     try {
-      const data: AxiosResponse = await axios.post(
+      await axios.post(
         "http://localhost:5000/api/user/attendance/clockin",
 
         values,
@@ -113,12 +115,13 @@ const Attendance: React.FC = () => {
           },
         }
       );
-      console.log(data);
-      setCurrentAttendanceId(data.data.id);
+      // console.log(list);
       setList(!list);
+      // console.log(list);
+      // console.log(attendance);
     } catch (error) {
       const err = error as AxiosError;
-      console.log(err.response?.data);
+      console.log(err);
     }
   };
 
@@ -130,8 +133,8 @@ const Attendance: React.FC = () => {
     };
 
     try {
-      const data: AxiosResponse = await axios.patch(
-        `http://localhost:5000/api/user/attendance/clockout/${currentAttendanceId}`,
+      await axios.patch(
+        `http://localhost:5000/api/user/attendance/clockout`,
 
         values,
 
@@ -141,7 +144,7 @@ const Attendance: React.FC = () => {
           },
         }
       );
-      console.log(data);
+      // console.log(data);
       setList(!list);
     } catch (error) {
       const err = error as AxiosError;
@@ -169,7 +172,7 @@ const Attendance: React.FC = () => {
       ) : (
         <h2 style={{ marginTop: "20px" }}>No Attendance Yet</h2>
       )}
-      {list && (
+      {list && attendance.no > 0 && (
         <table style={{ marginTop: "20px" }}>
           <tbody>
             <tr key={"header"}>
