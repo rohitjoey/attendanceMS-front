@@ -6,7 +6,7 @@ import App from "./App";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/attendanceMS-front">
       <App />
     </BrowserRouter>
   </React.StrictMode>,
