@@ -6,13 +6,13 @@ const Home: React.FC = () => {
     <div className="container">
       <h1>Hello</h1>
 
-      <a href="/login">
+      <a href="/attendanceMS-front/login">
         <Button type="button" className="btn btn-primary">
           Log in
         </Button>{" "}
       </a>
 
-      <a href="/register">
+      <a href="/attendanceMS-front/register">
         <Button variant="secondary">Register</Button>
       </a>
     </div>
