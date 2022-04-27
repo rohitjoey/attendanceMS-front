@@ -58,6 +58,9 @@ const Register: React.FC = (props) => {
             value={values.username}
             onChange={onChange}
           />
+          <Form.Control.Feedback type="invalid">
+            Please enter the uername.
+          </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formGroupPassword">
           <Form.Label>Password</Form.Label>
@@ -68,6 +71,9 @@ const Register: React.FC = (props) => {
             value={values.password}
             onChange={onChange}
           />
+          <Form.Control.Feedback type="invalid">
+            Please enter the password.
+          </Form.Control.Feedback>
         </Form.Group>
         <Button variant="primary" type="submit">
           Log in
