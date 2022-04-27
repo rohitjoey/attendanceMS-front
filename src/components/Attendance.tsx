@@ -1,13 +1,11 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import React, { useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import auth from "./util/auth";
 
 const Attendance: React.FC = () => {
-  //   console.log("here here");
-  //   console.log(userData);
-
   interface IAttendance {
     attendance: [];
     no: 0;
@@ -23,6 +21,7 @@ const Attendance: React.FC = () => {
   // }
 
   const [attendance, setAttendance] = useState({ attendance: [], no: 0 });
+
   const [list, setList] = useState(false);
   // const [currentAttendanceId, setCurrentAttendanceId] = useState(0);
 
@@ -155,7 +154,7 @@ const Attendance: React.FC = () => {
   let navigate = useNavigate();
 
   return (
-    <div className="container">
+    <Container fluid="md">
       <h1>WELCOME</h1>
       <Button
         onClick={() => {
@@ -166,6 +165,14 @@ const Attendance: React.FC = () => {
         }}
       >
         Logout
+      </Button>{" "}
+      <Button
+        variant="info"
+        onClick={() => {
+          navigate("/userDetail");
+        }}
+      >
+        My Detail
       </Button>
       {list ? (
         <h2 style={{ marginTop: "20px" }}>Your Attendance</h2>
@@ -221,7 +228,7 @@ const Attendance: React.FC = () => {
       <Button variant="outline-primary" onClick={clockedOut}>
         Clock out
       </Button>{" "}
-    </div>
+    </Container>
   );
 };
 

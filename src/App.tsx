@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import NotFound from "./components/NotFound";
 import Register from "./components/Register";
 import RegisterDetail from "./components/RegisterDetail";
+import UserDetail from "./components/UserDetail";
 import { AuthRoute } from "./components/util/AuthRoute";
 
 const App: React.FC = () => {
@@ -15,6 +16,7 @@ const App: React.FC = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/registerDetail" element={<RegisterDetail />} />
+      <Route path="/userDetail" element={<UserDetail />} />
 
       <Route
         path="/attendance"

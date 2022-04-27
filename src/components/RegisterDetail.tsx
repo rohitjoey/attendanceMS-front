@@ -52,7 +52,7 @@ const RegisterDetail = () => {
       );
       //   const userId = user.data.user.id;
       if (user.data.success) {
-        navigate("/attendance");
+        navigate("/attendance", { state: { fname: values.first_name } });
       }
       //   localStorage.setItem("token", user.data.token);
     } catch (error) {
@@ -75,7 +75,7 @@ const RegisterDetail = () => {
       user_id: userId,
     });
 
-    console.log(values);
+    // console.log(values);
     setValidated(true);
     registerUser(values);
   };
