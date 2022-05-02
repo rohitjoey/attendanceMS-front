@@ -4,10 +4,13 @@ import { Button } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
+// import { useGlobalState } from "../Context/AdminContex";
 import auth from "./util/auth";
 
 const Register: React.FC = (props) => {
+  // const { isAdminSetState } = useGlobalState();
   const [values, setValues] = useState({ username: "", password: "" });
+  const [validated, setValidated] = useState(false);
 
   let navigate = useNavigate();
 
@@ -21,11 +24,15 @@ const Register: React.FC = (props) => {
         "http://localhost:5000/api/user/login",
         values
       );
-      // console.log(user);
+      const admin = user.data.admin;
+
+      // isAdminSetState(admin);
+
+      // console.log(admin);
 
       localStorage.setItem("token", user.data.token);
       auth.login(() => {
-        navigate("/attendance");
+        navigate("/attendance", { state: admin });
       });
     } catch (error) {
       const err = error as AxiosError;
@@ -35,8 +42,10 @@ const Register: React.FC = (props) => {
 
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    //here invoke the register post
+
     setValues({ username: "", password: "" });
+    setValidated(true);
+
     loginUser(values);
     // console.log(values);
   };
@@ -47,6 +56,7 @@ const Register: React.FC = (props) => {
         style={{ marginTop: "20px", width: "700px" }}
         onSubmit={onSubmit}
         noValidate
+        validated={validated}
       >
         <h1>Log in</h1>
         <Form.Group className="mb-3" controlId="formGroupEmail">
@@ -59,7 +69,7 @@ const Register: React.FC = (props) => {
             onChange={onChange}
           />
           <Form.Control.Feedback type="invalid">
-            Please enter the uername.
+            Please enter the username.
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formGroupPassword">

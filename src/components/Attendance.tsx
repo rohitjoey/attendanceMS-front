@@ -2,7 +2,8 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+// import { useGlobalState } from "../Context/AdminContex";
 import auth from "./util/auth";
 
 const Attendance: React.FC = () => {
@@ -10,6 +11,17 @@ const Attendance: React.FC = () => {
     attendance: [];
     no: 0;
   }
+
+  type LocationState = {
+    state: {
+      admin: boolean;
+    };
+  };
+
+  let location = useLocation();
+
+  const admin = (location as LocationState)?.state;
+  console.log(admin);
 
   // interface IA{
   //   id:number,
@@ -21,10 +33,11 @@ const Attendance: React.FC = () => {
   // }
 
   const [attendance, setAttendance] = useState({ attendance: [], no: 0 });
+  // const [admin, setAdmin] = useState(false);
 
   const [list, setList] = useState(false);
   // const [currentAttendanceId, setCurrentAttendanceId] = useState(0);
-
+  // console.log(admin);
   const dateToLocal = (data: IAttendance) => {
     // console.log(data.attendance);
     data.attendance.forEach((element: any) => {
@@ -48,9 +61,13 @@ const Attendance: React.FC = () => {
     setAttendance(data);
   };
 
+  // const { isAdminState } = useGlobalState();
+  // console.log(isAdminState);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     // console.log("useeffect");
+
     axios
       .get("http://localhost:5000/api/user/attendance", {
         headers: {
@@ -58,8 +75,8 @@ const Attendance: React.FC = () => {
         },
       })
       .then((res: AxiosResponse) => {
+        console.log(res);
         if (res.data.no > 0) {
-          // console.log(res.data.attendance);
           dateToLocal(res.data);
           // console.log("response");
           setList(true);
@@ -228,6 +245,15 @@ const Attendance: React.FC = () => {
       <Button variant="outline-primary" onClick={clockedOut}>
         Clock out
       </Button>{" "}
+      {admin && (
+        <Button
+          onClick={() => {
+            navigate("/adminAction");
+          }}
+        >
+          Admin Action
+        </Button>
+      )}
     </Container>
   );
 };

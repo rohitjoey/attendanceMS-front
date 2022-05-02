@@ -10,3 +10,11 @@ export interface iDetail {
   user_id: String;
   department_id?: String;
 }
+
+export interface iRole {
+  description: String;
+  id: String;
+  role_code: String;
+  title: String;
+  user_id: String;
+}

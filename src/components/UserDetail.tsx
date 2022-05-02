@@ -1,18 +1,12 @@
 import axios, { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { iDetail } from "../interfaces/detail.interface";
+import Role from "../components/Role";
+import { iDetail, iRole } from "../interfaces/detail.interface";
 
 const UserDetail: React.FC = () => {
-  interface iRole {
-    description: String;
-    id: String;
-    role_code: String;
-    title: String;
-    user_id: String;
-  }
-
   const [stage, setStage] = useState({ loading: true, error: false });
+  const [stageR, setStageR] = useState({ loadingR: true, errorR: false });
   const [detail, setDetail] = useState<iDetail>({
     id: "",
     first_name: "",
@@ -44,6 +38,7 @@ const UserDetail: React.FC = () => {
             Authorization: token || "no token",
           },
         });
+        console.log(res);
         setDetail(res.data.userDetail);
         const userId = res.data.userDetail.user_id;
 
@@ -64,15 +59,15 @@ const UserDetail: React.FC = () => {
           setUserRole(res1.data.userRole);
           // console.log(userRole.data);
           // console.log(userRole.data.tite);
-          setStage({
-            loading: false,
-            error: false,
+          setStageR({
+            loadingR: false,
+            errorR: false,
           });
         } catch (error) {
           const err = error as AxiosError;
-          setStage({
-            loading: false,
-            error: true,
+          setStageR({
+            loadingR: false,
+            errorR: true,
           });
           console.log(err.response?.data);
         }
@@ -89,10 +84,11 @@ const UserDetail: React.FC = () => {
 
   //   console.log(detail);
   const { loading, error } = stage;
+  const { loadingR, errorR } = stageR;
 
-  console.log(userRole.title);
+  // console.log(userRole.title);
 
-  console.log(detail);
+  // console.log(detail);
   //   console.log(Object.keys(detail));
 
   // console.log(userRolesdf);
@@ -105,8 +101,8 @@ const UserDetail: React.FC = () => {
       </Row>
       <Row>
         <Col>
-          <h1>Detail</h1>
-          {!loading && !error && detail && (
+          <h3>Detail</h3>
+          {!loading && !error && detail ? (
             <table style={{ marginTop: "20px" }}>
               <tbody>
                 {(Object.keys(detail) as (keyof typeof detail)[]).map(function (
@@ -144,48 +140,16 @@ const UserDetail: React.FC = () => {
                 })}
               </tbody>
             </table>
+          ) : (
+            <h3>No user detail</h3>
           )}
         </Col>
         <Col>
           <h2>Role</h2>
-          {!loading && !error && detail && (
-            <table style={{ marginTop: "20px" }}>
-              <tbody>
-                {(Object.keys(userRole) as (keyof typeof userRole)[]).map(
-                  function (element) {
-                    return (
-                      <tr
-                        style={{
-                          border: "1px solid black",
-
-                          padding: "5px 5px",
-                        }}
-                        key={element}
-                      >
-                        <td
-                          style={{
-                            border: "1px solid black",
-
-                            padding: "5px 50px",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {element}
-                        </td>
-                        <td
-                          style={{
-                            border: "1px solid black",
-                            padding: "5px 50px",
-                          }}
-                        >
-                          {userRole[element]}
-                        </td>
-                      </tr>
-                    );
-                  }
-                )}
-              </tbody>
-            </table>
+          {!loadingR && !errorR && userRole ? (
+            <Role userRole={userRole} />
+          ) : (
+            <h5>Role not assigned</h5>
           )}
         </Col>
       </Row>
