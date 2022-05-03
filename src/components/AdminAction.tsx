@@ -43,7 +43,19 @@ const AdminAction: React.FC = () => {
 
   const assign = async (modelName: String | undefined) => {
     if (modelName === "Assign Role") {
-      console.log("role", values);
+      // console.log("role", values);
+
+      (async () => {
+        try {
+          const res: AxiosResponse = await axios.post(
+            "http://localhost:5000/api/role/assign",
+            values
+          );
+          console.log(res);
+        } catch (error) {
+          console.log(error);
+        }
+      })();
     } else if (modelName === "Assign Department") {
       console.log("department", values);
     } else {
