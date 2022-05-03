@@ -22,15 +22,14 @@ const AdminAction: React.FC = () => {
   const [modelName, setModelName] = useState<String>();
 
   const [values, setValues] = useState({
-    userId: undefined,
-    assignedId: undefined,
+    userId: "",
+    assignedId: "",
   });
-  const [validated, setValidated] = useState(false);
 
   const handleClose = () => {
     setShow(false);
     setModelName("");
-    setValues({ userId: undefined, assignedId: undefined });
+    setValues({ userId: "", assignedId: "" });
   };
   const handleShow = (name: String) => {
     // console.log(name);
@@ -42,17 +41,25 @@ const AdminAction: React.FC = () => {
     setValues({ ...values, [event.target.name]: event.target.value });
   };
 
-  //   console.log(validated);
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    //here invoke the register post
-    setValues({ userId: undefined, assignedId: undefined });
-    setValidated(true);
-    // setShow(false);
-    if (validated) {
-      setShow(false);
-      console.log(values);
+  const assign = async (modelName: String | undefined) => {
+    if (modelName === "Assign Role") {
+      console.log("role", values);
+    } else if (modelName === "Assign Department") {
+      console.log("department", values);
+    } else {
+      console.log("NOOOOO");
     }
+  };
+
+  //   console.log(validated);
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // console.log(values);
+    // console.log(modelName);
+    assign(modelName);
+    setShow(false);
+    setValues({ userId: "", assignedId: "" });
+    // setShow(false);
   };
 
   const [stage, setStage] = useState({ loading: true, error: false });
@@ -306,11 +313,12 @@ const AdminAction: React.FC = () => {
           <Modal.Title>{modelName}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={handleSubmit} noValidate validated={validated}>
+          <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="userId">
               <Form.Label>User Id</Form.Label>
               <Form.Control
                 type="number"
+                min="0"
                 placeholder="Enter the user's id"
                 autoFocus
                 required
@@ -326,6 +334,7 @@ const AdminAction: React.FC = () => {
               <Form.Label>{modelName} Id</Form.Label>
               <Form.Control
                 type="number"
+                min="0"
                 placeholder="Enter the id"
                 autoFocus
                 required
