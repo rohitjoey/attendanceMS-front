@@ -84,38 +84,15 @@ const UserDetail: React.FC = () => {
         <Col>
           <h3>Detail</h3>
           {!loading && !error && detail ? (
-            <table style={{ marginTop: "20px" }}>
+            <table className="table table-bordered mt-3">
               <tbody>
                 {(Object.keys(detail) as (keyof typeof detail)[]).map(function (
                   element
                 ) {
                   return (
-                    <tr
-                      style={{
-                        border: "1px solid black",
-
-                        padding: "5px 5px",
-                      }}
-                      key={element}
-                    >
-                      <td
-                        style={{
-                          border: "1px solid black",
-
-                          padding: "5px 50px",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {element}
-                      </td>
-                      <td
-                        style={{
-                          border: "1px solid black",
-                          padding: "5px 50px",
-                        }}
-                      >
-                        {detail[element]}
-                      </td>
+                    <tr key={element}>
+                      <td style={{ fontWeight: "bold" }}>{element}</td>
+                      <td>{detail[element]}</td>
                     </tr>
                   );
                 })}

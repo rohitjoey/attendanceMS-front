@@ -197,7 +197,7 @@ const Attendance: React.FC = () => {
         <h2 style={{ marginTop: "20px" }}>No Attendance Yet</h2>
       )}
       {list && attendance.no > 0 && (
-        <table style={{ marginTop: "20px" }}>
+        <table className="table table-bordered mt-3">
           <tbody>
             <tr key={"header"}>
               {Object.keys(attendance.attendance[0])
@@ -208,31 +208,13 @@ const Attendance: React.FC = () => {
                 //   return true;
                 // })
                 .map((key, i) => (
-                  <th
-                    style={{
-                      border: "1px solid black",
-                      margin: "0px 0px",
-                      padding: "5px 5px",
-                    }}
-                    key={i}
-                  >
-                    {key}
-                  </th>
+                  <th key={i}>{key}</th>
                 ))}
             </tr>
             {attendance.attendance.map((item, i) => (
               <tr key={i}>
                 {Object.values(item).map((val: any, i) => (
-                  <td
-                    style={{
-                      border: "1px solid black",
-                      margin: "0px 0px",
-                      padding: "5px 5px",
-                    }}
-                    key={i}
-                  >
-                    {val}
-                  </td>
+                  <td key={i}>{val}</td>
                 ))}
               </tr>
             ))}

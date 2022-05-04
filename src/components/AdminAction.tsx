@@ -1,19 +1,15 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { Col, Container, Form, Modal, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 
 const AdminAction: React.FC = () => {
-  interface iUser {
-    username: String;
-    id: String;
-    active?: String;
-    verified_at: String;
-    password?: String;
-  }
-
+  const pageSize = 7;
   const [usersList, setUsersList] = useState([]);
+  const [paginatedList, setPaginatedList] = useState<Number[]>([]);
+  const [currentPage, setCurrentPage] = useState<Number>(1);
   const [roleList, setRoleList] = useState([]);
   const [departmentList, setDepartmentList] = useState([]);
 
@@ -135,6 +131,7 @@ const AdminAction: React.FC = () => {
           // });
           //   console.log(allData[0]);
           setUsersList(res.data.users);
+          setPaginatedList(_(res.data.users).slice(0).take(pageSize).value());
           setRoleList(res1.data);
           setDepartmentList(res2.data);
           setStage({
@@ -166,6 +163,18 @@ const AdminAction: React.FC = () => {
 
   const { loading, error } = stage;
 
+  const pageCount = usersList ? Math.ceil(usersList.length / pageSize) : 0;
+  // console.log(pageCount);
+  if (pageCount === 1) return null;
+  const pages = _.range(1, pageCount + 1);
+
+  const pagination = (pageNo: number) => {
+    setCurrentPage(pageNo);
+    const startIndex = (pageNo - 1) * pageSize;
+    const newList = _(usersList).slice(startIndex).take(pageSize).value();
+    setPaginatedList(newList);
+  };
+
   return (
     <Container fluid="md">
       {!loading && !error ? (
@@ -189,7 +198,8 @@ const AdminAction: React.FC = () => {
           {!loading && !error && usersList && (
             <>
               <h3>Users List</h3>
-              <table style={{ marginTop: "20px" }}>
+
+              <table className="table table-bordered">
                 <tbody>
                   <tr key={"header"}>
                     {Object.keys(usersList[0])
@@ -200,36 +210,33 @@ const AdminAction: React.FC = () => {
                       //   return true;
                       // })
                       .map((key, i) => (
-                        <th
-                          style={{
-                            border: "1px solid black",
-                            margin: "0px 0px",
-                            padding: "5px 5px",
-                          }}
-                          key={i}
-                        >
-                          {key}
-                        </th>
+                        <th key={i}>{key}</th>
                       ))}
                   </tr>
-                  {usersList.map((item, i) => (
+                  {paginatedList.map((item, i) => (
                     <tr key={i}>
                       {Object.values(item).map((val: any, i) => (
-                        <td
-                          style={{
-                            border: "1px solid black",
-                            margin: "0px 0px",
-                            padding: "5px 5px",
-                          }}
-                          key={i}
-                        >
-                          {val}
-                        </td>
+                        <td key={i}>{val}</td>
                       ))}
                     </tr>
                   ))}
                 </tbody>
               </table>
+              <nav className="d-flex justify-content-center">
+                <ul className="pagination">
+                  {pages.map((page: number) => (
+                    <li
+                      className={
+                        page === currentPage ? "page-item active" : "page-item"
+                      }
+                    >
+                      <p className="page-link" onClick={() => pagination(page)}>
+                        {page}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
             </>
           )}
         </Col>
@@ -240,7 +247,7 @@ const AdminAction: React.FC = () => {
               <Button onClick={() => handleShow("Assign Role")}>
                 Assign Role to User
               </Button>
-              <table style={{ marginTop: "20px" }}>
+              <table className="table table-bordered mt-3">
                 <tbody>
                   <tr key={"header"}>
                     {Object.keys(roleList[0])
@@ -251,31 +258,13 @@ const AdminAction: React.FC = () => {
                       //   return true;
                       // })
                       .map((key, i) => (
-                        <th
-                          style={{
-                            border: "1px solid black",
-                            margin: "0px 0px",
-                            padding: "5px 5px",
-                          }}
-                          key={i}
-                        >
-                          {key}
-                        </th>
+                        <th key={i}>{key}</th>
                       ))}
                   </tr>
                   {roleList.map((item, i) => (
                     <tr key={i}>
                       {Object.values(item).map((val: any, i) => (
-                        <td
-                          style={{
-                            border: "1px solid black",
-                            margin: "0px 0px",
-                            padding: "5px 5px",
-                          }}
-                          key={i}
-                        >
-                          {val}
-                        </td>
+                        <td key={i}>{val}</td>
                       ))}
                     </tr>
                   ))}
@@ -291,7 +280,7 @@ const AdminAction: React.FC = () => {
               <Button onClick={() => handleShow("Assign Department")}>
                 Assign Department to User
               </Button>
-              <table style={{ marginTop: "20px" }}>
+              <table className="table table-bordered mt-3">
                 <tbody>
                   <tr key={"header"}>
                     {Object.keys(departmentList[0])
@@ -302,31 +291,13 @@ const AdminAction: React.FC = () => {
                       //   return true;
                       // })
                       .map((key, i) => (
-                        <th
-                          style={{
-                            border: "1px solid black",
-                            margin: "0px 0px",
-                            padding: "5px 5px",
-                          }}
-                          key={i}
-                        >
-                          {key}
-                        </th>
+                        <th key={i}>{key}</th>
                       ))}
                   </tr>
                   {departmentList.map((item, i) => (
                     <tr key={i}>
                       {Object.values(item).map((val: any, i) => (
-                        <td
-                          style={{
-                            border: "1px solid black",
-                            margin: "0px 0px",
-                            padding: "5px 5px",
-                          }}
-                          key={i}
-                        >
-                          {val}
-                        </td>
+                        <td key={i}>{val}</td>
                       ))}
                     </tr>
                   ))}
