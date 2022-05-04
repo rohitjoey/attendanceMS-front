@@ -8,7 +8,7 @@ const AdminAction: React.FC = () => {
   interface iUser {
     username: String;
     id: String;
-    active: String;
+    active?: String;
     verified_at: String;
     password?: String;
   }
@@ -61,18 +61,18 @@ const AdminAction: React.FC = () => {
         }
       })();
     } else if (modelName === "Assign Department") {
-      // console.log("department", values);
-      // (async () => {
-      //   try {
-      //     const res: AxiosResponse = await axios.post(
-      //       "http://localhost:5000/api/department/assign",
-      //       values
-      //     );
-      //     console.log(res);
-      //   } catch (error) {
-      //     console.log(error);
-      //   }
-      // })();
+      (async () => {
+        try {
+          const res: AxiosResponse = await axios.post(
+            "http://localhost:5000/api/department/assign",
+            values
+          );
+          // alert(res.data);
+          setStatus(res.data.status);
+        } catch (error) {
+          console.log(error);
+        }
+      })();
     } else {
       console.log("NOOOOO");
     }
@@ -130,6 +130,7 @@ const AdminAction: React.FC = () => {
           let allData = res.data.users;
           allData = allData.map((x: iUser) => {
             delete x.password;
+            // delete x.active;
             return x;
           });
           //   console.log(allData[0]);
@@ -154,10 +155,10 @@ const AdminAction: React.FC = () => {
         // console.log(userId);
       } catch (error) {
         const err = error as AxiosError;
-        // setStage({
-        //   loading: false,
-        //   error: true,
-        // });
+        setStage({
+          loading: false,
+          error: true,
+        });
         console.log(err.response?.data);
       }
     })();

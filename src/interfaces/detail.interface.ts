@@ -16,5 +16,10 @@ export interface iRole {
   id: String;
   role_code: String;
   title: String;
-  user_id: String;
+}
+
+export interface iDepartment {
+  id: String;
+  name: String;
+  hod: String;
 }

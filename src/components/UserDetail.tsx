@@ -1,12 +1,12 @@
 import axios, { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
+import Department from "../components/Department";
 import Role from "../components/Role";
-import { iDetail, iRole } from "../interfaces/detail.interface";
+import { iDepartment, iDetail, iRole } from "../interfaces/detail.interface";
 
 const UserDetail: React.FC = () => {
   const [stage, setStage] = useState({ loading: true, error: false });
-  const [stageR, setStageR] = useState({ loadingR: true, errorR: false });
   const [detail, setDetail] = useState<iDetail>({
     id: "",
     first_name: "",
@@ -25,7 +25,12 @@ const UserDetail: React.FC = () => {
     id: "",
     role_code: "",
     title: "",
-    user_id: "",
+  });
+
+  const [userDepartment, setUserDepartment] = useState<iDepartment>({
+    id: "",
+    name: "",
+    hod: "",
   });
 
   useEffect(() => {
@@ -38,7 +43,9 @@ const UserDetail: React.FC = () => {
             Authorization: token || "no token",
           },
         });
-        console.log(res);
+        console.log(res.data.userDetail);
+        const data = res.data.userDetail;
+        ["id", "department_id", "role_id"].forEach((e) => delete data[e]);
         setDetail(res.data.userDetail);
         const userId = res.data.userDetail.user_id;
 
@@ -56,18 +63,48 @@ const UserDetail: React.FC = () => {
               },
             }
           );
+          const roleData = res1.data.userRole;
+          delete roleData.id;
           setUserRole(res1.data.userRole);
           // console.log(userRole.data);
           // console.log(userRole.data.tite);
-          setStageR({
-            loadingR: false,
-            errorR: false,
+          setStage({
+            loading: false,
+            error: false,
           });
         } catch (error) {
           const err = error as AxiosError;
-          setStageR({
-            loadingR: false,
-            errorR: true,
+          setStage({
+            loading: false,
+            error: true,
+          });
+          console.log(err.response?.data);
+        }
+
+        try {
+          const res1 = await axios.get(
+            `http://localhost:5000/api/department/${userId}`,
+            {
+              headers: {
+                Authorization: token || "no token",
+              },
+            }
+          );
+          // console.log(res1.data);
+          const departmentData = res1.data.userDepartment;
+          delete departmentData.id;
+          setUserDepartment(res1.data.userDepartment);
+          // console.log(userRole.data);
+          // console.log(userRole.data.tite);
+          setStage({
+            loading: false,
+            error: false,
+          });
+        } catch (error) {
+          const err = error as AxiosError;
+          setStage({
+            loading: false,
+            error: true,
           });
           console.log(err.response?.data);
         }
@@ -84,7 +121,7 @@ const UserDetail: React.FC = () => {
 
   //   console.log(detail);
   const { loading, error } = stage;
-  const { loadingR, errorR } = stageR;
+  // const { loadingR, errorR } = stageR;
 
   // console.log(userRole.title);
 
@@ -145,12 +182,22 @@ const UserDetail: React.FC = () => {
           )}
         </Col>
         <Col>
-          <h2>Role</h2>
-          {!loadingR && !errorR && userRole ? (
-            <Role userRole={userRole} />
-          ) : (
-            <h5>Role not assigned</h5>
-          )}
+          <Row>
+            <h2>Role</h2>
+            {!loading && !error && userRole ? (
+              <Role userRole={userRole} />
+            ) : (
+              <h5>Role not assigned</h5>
+            )}
+          </Row>
+          <Row>
+            <h2>Department</h2>
+            {!loading && !error && userDepartment ? (
+              <Department userDepartment={userDepartment} />
+            ) : (
+              <h5>Department not assigned</h5>
+            )}
+          </Row>
         </Col>
       </Row>
 
