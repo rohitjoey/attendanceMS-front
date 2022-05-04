@@ -26,10 +26,13 @@ const AdminAction: React.FC = () => {
     assignedId: "",
   });
 
+  const [status, setStatus] = useState("");
+
   const handleClose = () => {
     setShow(false);
     setModelName("");
     setValues({ userId: "", assignedId: "" });
+    setStatus("");
   };
   const handleShow = (name: String) => {
     // console.log(name);
@@ -51,13 +54,25 @@ const AdminAction: React.FC = () => {
             "http://localhost:5000/api/role/assign",
             values
           );
-          console.log(res);
+          // alert(res.data);
+          setStatus(res.data.status);
         } catch (error) {
           console.log(error);
         }
       })();
     } else if (modelName === "Assign Department") {
-      console.log("department", values);
+      // console.log("department", values);
+      // (async () => {
+      //   try {
+      //     const res: AxiosResponse = await axios.post(
+      //       "http://localhost:5000/api/department/assign",
+      //       values
+      //     );
+      //     console.log(res);
+      //   } catch (error) {
+      //     console.log(error);
+      //   }
+      // })();
     } else {
       console.log("NOOOOO");
     }
@@ -69,7 +84,9 @@ const AdminAction: React.FC = () => {
     // console.log(values);
     // console.log(modelName);
     assign(modelName);
-    setShow(false);
+    // setShow(false);
+    // console.log(values);
+
     setValues({ userId: "", assignedId: "" });
     // setShow(false);
   };
@@ -366,6 +383,9 @@ const AdminAction: React.FC = () => {
             </Button>
           </Form>
         </Modal.Body>
+        <Modal.Footer>
+          <p>{status}</p>
+        </Modal.Footer>
       </Modal>
     </Container>
   );
