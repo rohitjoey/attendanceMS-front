@@ -127,14 +127,14 @@ const AdminAction: React.FC = () => {
         // console.log(res.data.users.length);
         // console.log(res.data.success);
         if (res.data.success) {
-          let allData = res.data.users;
-          allData = allData.map((x: iUser) => {
-            delete x.password;
-            // delete x.active;
-            return x;
-          });
+          // let allData = res.data.users;
+          // allData = allData.map((x: iUser) => {
+          //   delete x.password;
+          //   // delete x.active;
+          //   return x;
+          // });
           //   console.log(allData[0]);
-          setUsersList(allData);
+          setUsersList(res.data.users);
           setRoleList(res1.data);
           setDepartmentList(res2.data);
           setStage({

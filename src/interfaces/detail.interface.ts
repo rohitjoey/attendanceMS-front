@@ -1,5 +1,4 @@
 export interface iDetail {
-  id: String;
   first_name: String;
   last_name: String;
   gender: String;
@@ -8,7 +7,8 @@ export interface iDetail {
   address: String;
   email: String;
   user_id: String;
-  department_id?: String;
+  role: {};
+  department: {};
 }
 
 export interface iRole {

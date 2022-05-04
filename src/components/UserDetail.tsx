@@ -1,14 +1,12 @@
 import axios, { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import Department from "../components/Department";
-import Role from "../components/Role";
-import { iDepartment, iDetail, iRole } from "../interfaces/detail.interface";
+import { iDetail } from "../interfaces/detail.interface";
+// import Department from './Department';
 
 const UserDetail: React.FC = () => {
   const [stage, setStage] = useState({ loading: true, error: false });
   const [detail, setDetail] = useState<iDetail>({
-    id: "",
     first_name: "",
     last_name: "",
     gender: "",
@@ -17,20 +15,8 @@ const UserDetail: React.FC = () => {
     address: "",
     email: "",
     user_id: "",
-    department_id: "",
-  });
-
-  const [userRole, setUserRole] = useState<iRole>({
-    description: "",
-    id: "",
-    role_code: "",
-    title: "",
-  });
-
-  const [userDepartment, setUserDepartment] = useState<iDepartment>({
-    id: "",
-    name: "",
-    hod: "",
+    role: {},
+    department: {},
   });
 
   useEffect(() => {
@@ -45,76 +31,34 @@ const UserDetail: React.FC = () => {
         });
         console.log(res.data.userDetail);
         const data = res.data.userDetail;
-        ["id", "department_id", "role_id"].forEach((e) => delete data[e]);
-        setDetail(res.data.userDetail);
-        const userId = res.data.userDetail.user_id;
+        const role = res.data.userDetail.role;
+        const department = res.data.userDetail.department;
+        if (role) {
+        }
+        data.role = role ? role.title : "No role assigned";
+        data.department = department
+          ? department.name
+          : "No department assigned";
+
+        // const userDepartment = res.data.userDetail.department;
+        // console.log(title);
+        // setUserRole(userRole);
+        // setUserDepartment(userDepartment);
+        // ["role", "department"].forEach((e) => delete res.data.userDetail[e]);
+        setDetail(data);
 
         setStage({
           loading: false,
           error: false,
         });
         // console.log(userId);
-        try {
-          const res1 = await axios.get(
-            `http://localhost:5000/api/role/${userId}`,
-            {
-              headers: {
-                Authorization: token || "no token",
-              },
-            }
-          );
-          const roleData = res1.data.userRole;
-          delete roleData.id;
-          setUserRole(res1.data.userRole);
-          // console.log(userRole.data);
-          // console.log(userRole.data.tite);
-          setStage({
-            loading: false,
-            error: false,
-          });
-        } catch (error) {
-          const err = error as AxiosError;
-          setStage({
-            loading: false,
-            error: true,
-          });
-          console.log(err.response?.data);
-        }
-
-        try {
-          const res1 = await axios.get(
-            `http://localhost:5000/api/department/${userId}`,
-            {
-              headers: {
-                Authorization: token || "no token",
-              },
-            }
-          );
-          // console.log(res1.data);
-          const departmentData = res1.data.userDepartment;
-          delete departmentData.id;
-          setUserDepartment(res1.data.userDepartment);
-          // console.log(userRole.data);
-          // console.log(userRole.data.tite);
-          setStage({
-            loading: false,
-            error: false,
-          });
-        } catch (error) {
-          const err = error as AxiosError;
-          setStage({
-            loading: false,
-            error: true,
-          });
-          console.log(err.response?.data);
-        }
       } catch (error) {
         const err = error as AxiosError;
         setStage({
           loading: false,
           error: true,
         });
-        console.log(err.response?.data);
+        console.log(err);
       }
     })();
   }, []);
@@ -180,24 +124,6 @@ const UserDetail: React.FC = () => {
           ) : (
             <h3>No user detail</h3>
           )}
-        </Col>
-        <Col>
-          <Row>
-            <h2>Role</h2>
-            {!loading && !error && userRole ? (
-              <Role userRole={userRole} />
-            ) : (
-              <h5>Role not assigned</h5>
-            )}
-          </Row>
-          <Row>
-            <h2>Department</h2>
-            {!loading && !error && userDepartment ? (
-              <Department userDepartment={userDepartment} />
-            ) : (
-              <h5>Department not assigned</h5>
-            )}
-          </Row>
         </Col>
       </Row>
 
