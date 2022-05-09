@@ -21,7 +21,7 @@ const Attendance: React.FC = () => {
   let location = useLocation();
 
   const admin = (location as LocationState)?.state;
-  console.log(admin);
+  // console.log(admin);
 
   // interface IA{
   //   id:number,
@@ -227,13 +227,21 @@ const Attendance: React.FC = () => {
       <Button variant="outline-primary" onClick={clockedOut}>
         Clock out
       </Button>{" "}
-      {admin && (
+      {admin ? (
+        <Button
+          onClick={() => {
+            navigate("/adminAction", { state: admin });
+          }}
+        >
+          Admin Action
+        </Button>
+      ) : (
         <Button
           onClick={() => {
             navigate("/adminAction");
           }}
         >
-          Admin Action
+          Action
         </Button>
       )}
     </Container>

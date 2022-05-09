@@ -3,7 +3,7 @@ import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { Col, Container, Form, Modal, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const AdminAction: React.FC = () => {
   const pageSize = 7;
@@ -21,6 +21,16 @@ const AdminAction: React.FC = () => {
     userId: "",
     assignedId: "",
   });
+
+  type LocationState = {
+    state: {
+      admin: boolean;
+    };
+  };
+
+  let location = useLocation();
+
+  const admin = (location as LocationState)?.state;
 
   const [status, setStatus] = useState("");
 
@@ -111,17 +121,21 @@ const AdminAction: React.FC = () => {
             },
           }
         );
-        const res2: AxiosResponse = await axios.get(
-          "http://localhost:5000/api/department/",
-          {
-            headers: {
-              Authorization: token || "no token",
-            },
-          }
-        );
+        if (admin) {
+          const res2: AxiosResponse = await axios.get(
+            "http://localhost:5000/api/department/",
+            {
+              headers: {
+                Authorization: token || "no token",
+              },
+            }
+          );
+
+          setDepartmentList(res2.data.departments);
+        }
         // console.log(res1.data);
         // console.log(res.data.users.length);
-        // console.log(res.data.success);
+        // console.log(res.data.users.length);
         if (res.data.success) {
           // let allData = res.data.users;
           // allData = allData.map((x: iUser) => {
@@ -131,9 +145,11 @@ const AdminAction: React.FC = () => {
           // });
           //   console.log(allData[0]);
           setUsersList(res.data.users);
+
           setPaginatedList(_(res.data.users).slice(0).take(pageSize).value());
-          setRoleList(res1.data);
-          setDepartmentList(res2.data);
+
+          setRoleList(res1.data.roles);
+
           setStage({
             loading: false,
             error: false,
@@ -156,7 +172,7 @@ const AdminAction: React.FC = () => {
           loading: false,
           error: true,
         });
-        console.log(err.response?.data);
+        console.log(err);
       }
     })();
   }, []);
@@ -165,8 +181,9 @@ const AdminAction: React.FC = () => {
 
   const pageCount = usersList ? Math.ceil(usersList.length / pageSize) : 0;
   // console.log(pageCount);
-  if (pageCount === 1) return null;
+  // if (pageCount === 1) return null;
   const pages = _.range(1, pageCount + 1);
+  // console.log(pages);
 
   const pagination = (pageNo: number) => {
     setCurrentPage(pageNo);
@@ -175,6 +192,8 @@ const AdminAction: React.FC = () => {
     setPaginatedList(newList);
   };
 
+  // console.log(paginatedList);
+
   return (
     <Container fluid="md">
       {!loading && !error ? (
@@ -182,7 +201,7 @@ const AdminAction: React.FC = () => {
       ) : (
         <>
           <h1>Not authorized</h1>
-          <Link to="/">Go Home</Link>
+          <Link to="/attendance">Go Back</Link>
         </>
       )}
 
@@ -202,16 +221,9 @@ const AdminAction: React.FC = () => {
               <table className="table table-bordered">
                 <tbody>
                   <tr key={"header"}>
-                    {Object.keys(usersList[0])
-                      // .filter((key) => {
-                      //   if (key === "id" || key === "user_id") {
-                      //     return false;
-                      //   }
-                      //   return true;
-                      // })
-                      .map((key, i) => (
-                        <th key={i}>{key}</th>
-                      ))}
+                    {Object.keys(usersList[0]).map((key, i) => (
+                      <th key={i}>{key}</th>
+                    ))}
                   </tr>
                   {paginatedList.map((item, i) => (
                     <tr key={i}>
@@ -222,6 +234,7 @@ const AdminAction: React.FC = () => {
                   ))}
                 </tbody>
               </table>
+
               <nav className="d-flex justify-content-center">
                 <ul className="pagination">
                   {pages.map((page: number) => (
@@ -229,6 +242,7 @@ const AdminAction: React.FC = () => {
                       className={
                         page === currentPage ? "page-item active" : "page-item"
                       }
+                      key={page}
                     >
                       <p className="page-link" onClick={() => pagination(page)}>
                         {page}
@@ -274,7 +288,7 @@ const AdminAction: React.FC = () => {
           )}
         </Col>
         <Col>
-          {!loading && !error && departmentList && (
+          {!loading && !error && departmentList && admin && (
             <>
               <h2>Department List</h2>
               <Button onClick={() => handleShow("Assign Department")}>
