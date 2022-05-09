@@ -6,12 +6,38 @@ import Button from "react-bootstrap/Button";
 import { Link, useLocation } from "react-router-dom";
 
 const AdminAction: React.FC = () => {
+  interface iUser {
+    username: String;
+    id: string;
+    active?: Boolean;
+    verified_at: String;
+  }
+
+  interface iUsers extends Array<iUser> {}
+
+  interface iRole {
+    title: String;
+    id: string;
+    description?: String;
+    role_code: String;
+  }
+
+  interface iRoles extends Array<iRole> {}
+
+  interface iDepartment {
+    name: String;
+    id: string;
+    hod: String;
+  }
+
+  interface iDepartments extends Array<iDepartment> {}
+
   const pageSize = 7;
-  const [usersList, setUsersList] = useState([]);
-  const [paginatedList, setPaginatedList] = useState<Number[]>([]);
+  const [usersList, setUsersList] = useState<iUsers>([]);
+  const [paginatedList, setPaginatedList] = useState<iUsers>([]);
   const [currentPage, setCurrentPage] = useState<Number>(1);
-  const [roleList, setRoleList] = useState([]);
-  const [departmentList, setDepartmentList] = useState([]);
+  const [roleList, setRoleList] = useState<iRoles>([]);
+  const [departmentList, setDepartmentList] = useState<iDepartments>([]);
 
   const [show, setShow] = useState(false);
 
@@ -87,7 +113,7 @@ const AdminAction: React.FC = () => {
   //   console.log(validated);
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // console.log(values);
+    console.log(values);
     // console.log(modelName);
     assign(modelName);
     // setShow(false);
@@ -193,7 +219,7 @@ const AdminAction: React.FC = () => {
   };
 
   // console.log(paginatedList);
-
+  // console.log(values);
   return (
     <Container fluid="md">
       {!loading && !error ? (
@@ -331,7 +357,7 @@ const AdminAction: React.FC = () => {
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="userId">
               <Form.Label>User Id</Form.Label>
-              <Form.Control
+              {/* <Form.Control
                 type="number"
                 min="0"
                 placeholder="Enter the user's id"
@@ -340,14 +366,30 @@ const AdminAction: React.FC = () => {
                 name="userId"
                 value={values.userId}
                 onChange={onChange}
-              />
+              /> */}
+
+              <Form.Control
+                onChange={onChange}
+                required
+                name="userId"
+                as="select"
+                aria-label="Default select example"
+              >
+                <option value="">Select user id</option>
+                {usersList.map((e, i) => (
+                  <option key={i} value={e.id}>
+                    {e.id}
+                  </option>
+                ))}
+              </Form.Control>
+
               <Form.Control.Feedback type="invalid">
                 Please enter the user id.
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3" controlId="aId">
               <Form.Label>{modelName} Id</Form.Label>
-              <Form.Control
+              {/* <Form.Control
                 type="number"
                 min="0"
                 placeholder="Enter the id"
@@ -356,7 +398,28 @@ const AdminAction: React.FC = () => {
                 name="assignedId"
                 value={values.assignedId}
                 onChange={onChange}
-              />
+              /> */}
+
+              <Form.Control
+                onChange={onChange}
+                required
+                name="assignedId"
+                as="select"
+                aria-label="Default select example"
+              >
+                <option value="">Select id</option>
+                {modelName === "Assign Role"
+                  ? roleList.map((e, i) => (
+                      <option key={i} value={e.id}>
+                        {e.id}
+                      </option>
+                    ))
+                  : departmentList.map((e, i) => (
+                      <option key={i} value={e.id}>
+                        {e.id}
+                      </option>
+                    ))}
+              </Form.Control>
               <Form.Control.Feedback type="invalid">
                 Please enter the id.
               </Form.Control.Feedback>
